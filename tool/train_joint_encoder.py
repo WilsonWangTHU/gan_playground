@@ -19,7 +19,7 @@
 
 import __init_path
 import tensorflow as tf
-from model import joint_encoder
+from model.network import joint_encoder
 import util.model_saver as ms
 from config import cfg
 from util.util import joint_embedding_data_reader

@@ -5,7 +5,7 @@
 #   Written by Tingwu Wang, 2016/Sep/27
 #   # TODO: The initilize of parameters???? HOW???
 #   # TODO: the margin loss, how to choose the margin loss parameters?
-#   # TODO: add the caffe net.
+#   # TODO: add the alex net.
 #
 #   Major Update: From 2017, Feb., 7th, we got Fartash on board!
 # ------------------------------------------------------------------------------
@@ -14,7 +14,9 @@ import tensorflow as tf
 # from config import cfg
 import subnet.vgg.vgg19 as vgg19
 from util import model_saver as ms
+import util.ops as op
 import time
+import logging
 
 
 class joint_encoder(object):
@@ -35,6 +37,8 @@ class joint_encoder(object):
             def get_encoded_image
             def get_embedding_loss_placeholder
             def get_sen_img_placeholder
+        @TODO:
+            add the tf variable scope for better structure.
     '''
 
     def __init__(self, config, stage='train', is_sub_model=False):
@@ -147,14 +151,14 @@ class joint_encoder(object):
             @Size: [batch_size, MAX_SEQ_LEN]
         """
         with tf.variable_scope('text_encoder'):
-            embedding = \
+            self.embedding = \
                 tf.get_variable(
                     "embedding", initializer=tf.random_uniform(
                         [self.config.word_voc_size,
                             self.config.word_embedding_space_size],
                         -self.config.TRAIN.SENCODER.none_rnn_para_initial_max,
                         self.config.TRAIN.SENCODER.none_rnn_para_initial_max))
-            inputs = tf.nn.embedding_lookup(embedding, raw_encoder_input)
+            inputs = tf.nn.embedding_lookup(self.embedding, raw_encoder_input)
 
             # now it is [MAX_SEQ_LENGTH, batch_size, embedding_length]
             input_batch_order = tf.transpose(inputs, [1, 0, 2])
@@ -279,3 +283,100 @@ class joint_encoder(object):
 
     def get_sen_img_placeholder(self):
         return self.sentence_rep, self.image_rep
+
+    def get_embedding_matrix(self):
+        return self.embedding
+
+
+
+
+class joint_generator(object):
+    '''
+        @NOT FUNCTIONAL!
+        @brief:
+            The conditional generator. In the first edition, let's assume the
+            image embedding vector is conditioned to generate the text, and the
+            text vector is conditioned to generate the image (we have more
+            options though)
+        @components:
+            def __init__
+            def build_models
+    '''
+
+    def __init__(self, config, stage='train', is_sub_model=True,
+                 teacher_forcing=True, word_embedding=None):
+        """
+            @brief:
+                The initialization of the model. we use a config file to store
+                the information of configuration
+
+        """
+        assert False, logger.error('Joint generator not functional')
+        self.config = config  # config is a python variable
+        self.is_sub_model = is_sub_model  # if only part of the bigger net
+        self.step = 0  # the num of step
+        self.stage = stage  # train, test, val?
+        self.train = self.stage == 'train'
+        self.teacher_forcing = teacher_forcing
+        self.word_embedding = word_embedding
+
+        # in 'sen_test' or 'img_test' mode, only sentence or image encoder is
+        # constucted
+        assert self.stage in ['train', 'test', 'val', 'img_test', 'sen_test'], \
+            '[ERROR] Invalid stage of the network'
+
+    def build_models(self, img_rep, sen_rep, sen_z, img_z, teacher_input=None):
+        '''
+            @brief:
+                build the sentence encoder, and the image encoder. The output
+                is a embedding vector. note the input of the network is given
+                outside the network (so that this network could be used as a
+                subnet)
+            @input:
+
+            @notes:
+            @Tingwu: About the network, we sure have lots of solutions.. I am
+                going to write a baseline, but we should consider the
+                convenience issues to further boost our network
+        '''
+
+        # the condition vector of the network
+        self.img_rep = img_rep
+        self.sen_rep = sen_rep
+        self.batch_size = self.config.TRAIN.batch_size
+        '''
+        self.sen_z = \
+            tf.placeholder(tf.float32, [self.batch_size,
+                           self.config.z_dimension], name='sen_z')
+
+        self.img_z = \
+            tf.placeholder(tf.float32, [self.batch_size,
+                           self.config.z_dimension], name='img_z')
+        '''
+        self.sen_z = sen_z
+        self.img_z = img_z
+
+        if self.teacher_forcing:
+            assert (teacher_input is not None) and \
+                (self.word_embedding is not None), \
+                '[ERROR] Please specify the teacher input!'
+            self.teacher_input = teacher_input
+
+        if self.stage != 'sen_test':
+            self.build_image_generator()
+            print("[INIT MODEL]    Image generator built!")
+
+        if self.stage != 'image_test':
+            self.build_sentence_encoder()
+            print("[INIT MODEL]    sentence generator built!")
+
+    '''
+    @deprecated
+    def get_next_word(self):
+        # in this function, we calculate the predicted word based on the score
+
+        return
+    '''
+
+
+

@@ -39,3 +39,5 @@ easydict (pip install)
 torchfile (pip install)
 
 scikit-image (pip install)
+
+ipython, opencv2 (pip install)
