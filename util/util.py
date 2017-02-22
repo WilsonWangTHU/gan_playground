@@ -12,7 +12,7 @@ import os
 import torchfile
 import random
 from vgg_utils import load_image
-from util import logger
+import logger
 
 percentage_test = 0.35
 percentage_validate = 0.35  # it is deprecated
@@ -178,6 +178,7 @@ class tiGAN_data_reader():
         # make sure the data dir is initialized and valid
         assert dataset_name in ['bird'], logger.error('Invalid dataset name')
         assert stage in ['train'], logger.error('Test dataloader not usable')
+        logger.info('trying to load the dataset {}'.format(dataset_name))
 
         self.data_id = 0
         self.stage = stage
@@ -192,10 +193,11 @@ class tiGAN_data_reader():
             self.file_list_in_use = self.train_file_list
         elif self.stage == 'test':
             self.file_list_in_use = self.test_file_list
-        
-        del self.validate_file_list
+
         del self.train_file_list
         del self.test_file_list
+
+        self.dataset_size = len(self.file_list_in_use)
 
         return
 
@@ -206,7 +208,7 @@ class tiGAN_data_reader():
         '''
         # load the pre-parsed data_list
         file_abs_path = \
-                os.path.join(self.dataset_dir, self.dataset_name + '_list.npy')
+            os.path.join(self.dataset_dir, self.dataset_name + '_list.npy')
         if os.path.exists(file_abs_path):
             parse_file_list = np.load(file_abs_path, encoding='latin1').item()
             self.train_file_list = parse_file_list['train']
@@ -214,6 +216,7 @@ class tiGAN_data_reader():
             del parse_file_list
             logger.info('loaded data split from {}'.format(file_abs_path))
         else:
+            self.file_list = []
             logger.info('No split file found, parsing one')
             '''
                 data structure is as followed:
@@ -233,9 +236,8 @@ class tiGAN_data_reader():
 
                 for sub_file in sub_file_list:
                     self.file_list.append(os.path.join(self.dataset_dir,
-                        'raw_data', sub_dir, sub_file))
+                                          'raw_data', sub_dir, sub_file))
 
-            
             # shuffling the data and parse the data into 2 different sets
             random.shuffle(self.file_list)
             num_data = len(self.file_list)
@@ -256,8 +258,7 @@ class tiGAN_data_reader():
             np.save(file_abs_path, output_save_list)
 
             logger.info('[SAVE DATA] Data parsed list saved to {}'.format(
-                    file_abs_path))
-        self.dataset_size = len(self.file_list_in_use)
+                file_abs_path))
         return
 
     def next_batch(self, batch_size):

@@ -1,0 +1,61 @@
+[32m[0222 16:32:43 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0222-163243.log
+[32m[0222 16:32:43 @train_T2I.py:31][0m Session starts, using gpu: 0
+[32m[0222 16:32:43 @tiGAN.py:36][0m [31mWRN[0m test mode is not supported currently
+[32m[0222 16:32:43 @tiGAN.py:53][0m Building the text to image GAN model
+[32m[0222 16:32:44 @tiGAN.py:61][0m loss from real image and right text generated
+[32m[0222 16:32:44 @tiGAN.py:70][0m loss from real image and wrong text generated
+[32m[0222 16:32:45 @tiGAN.py:83][0m loss from fake image and right text generated
+[32m[0222 16:32:58 @util.py:181][0m trying to load the dataset bird
+[32m[0222 16:32:58 @util.py:217][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0222 16:32:59 @util.py:310][0m [LOAD BATCH] New batch, loading to id 16
+[32m[0222 16:33:02 @tiGAN.py:138][0m step: 0, discriminator: loss 1.43868434429, generator loss: [[ 0.69305927]
+ [ 0.69309485]
+ [ 0.69307506]
+ [ 0.69310433]
+ [ 0.69306439]
+ [ 0.69309968]
+ [ 0.69279987]
+ [ 0.69142067]
+ [ 0.69311869]
+ [ 0.69304597]
+ [ 0.69300467]
+ [ 0.69298154]
+ [ 0.69308585]
+ [ 0.69307727]
+ [ 0.69309479]
+ [ 0.6930874 ]]
+[32m[0222 16:33:03 @util.py:310][0m [LOAD BATCH] New batch, loading to id 32
+[32m[0222 16:33:06 @tiGAN.py:138][0m step: 1, discriminator: loss 1.36068415642, generator loss: [[ 0.69256914]
+ [ 0.69228977]
+ [ 0.69285798]
+ [ 0.69234055]
+ [ 0.69151962]
+ [ 0.69228578]
+ [ 0.69233221]
+ [ 0.6918447 ]
+ [ 0.69229931]
+ [ 0.69206476]
+ [ 0.69266367]
+ [ 0.69246614]
+ [ 0.69192928]
+ [ 0.6922155 ]
+ [ 0.6921156 ]
+ [ 0.69215   ]]
+[32m[0222 16:33:07 @util.py:310][0m [LOAD BATCH] New batch, loading to id 48
+[32m[0222 16:33:10 @tiGAN.py:138][0m step: 2, discriminator: loss 1.35256445408, generator loss: [[ 0.69154793]
+ [ 0.69183838]
+ [ 0.68998909]
+ [ 0.68911803]
+ [ 0.69147533]
+ [ 0.69064289]
+ [ 0.69004917]
+ [ 0.69255418]
+ [ 0.69225198]
+ [ 0.69278896]
+ [ 0.69048291]
+ [ 0.69083685]
+ [ 0.69101518]
+ [ 0.69134152]
+ [ 0.68911541]
+ [ 0.69211209]]
+[32m[0222 16:33:11 @util.py:310][0m [LOAD BATCH] New batch, loading to id 64

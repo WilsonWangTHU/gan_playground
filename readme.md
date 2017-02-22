@@ -40,4 +40,4 @@ torchfile (pip install)
 
 scikit-image (pip install)
 
-ipython, opencv2 (pip install)
+ipython, opencv2, logging, termcolor (pip install)

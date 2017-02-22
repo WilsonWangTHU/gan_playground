@@ -28,6 +28,7 @@ __C.text_gen_hidden_dim = 2400
 
 __C.preprocess_dimension = 128
 __C.z_dimension = 100
+__C.generator_l1_nchannel = 1024
 
 
 # basic training parameters

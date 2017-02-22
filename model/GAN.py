@@ -1,17 +1,19 @@
 # -----------------------------------------------------------------------------
-#   @brief: 
+#   @brief:
 #       In this file, we will first reimplement the T2I GAN model from the
 #       http://arxiv.org/abs/1605.05396.
 #       After that, we will see if we could implement wasserstein GAN
 #       And there is a lot of fun to do with the GAN at hand
 #   @author: Tingwu Wang, Feb., 20th, 2017
+#   @possible compatible problem:
+#       1. tf.expand / tf.expand_dims
 # -----------------------------------------------------------------------------
-
 
 
 import tensorflow as tf
 import util.ops as op
 from util import logger
+
 
 class img_generator(object):
     '''
@@ -19,27 +21,28 @@ class img_generator(object):
             We are going to generate image from text, just the way that icml
             2016 did.
     '''
-    
+
     def __init__(self, config, stage='train'):
         self.config = config  # config is a python variable
         self.step = 0  # the num of step
         self.stage = stage  # train, test, val?
         self.train = (self.stage == 'train')
+        self.batch_size = self.config.TRAIN.batch_size
 
     def build_image_generator(self, img_z, sen_rep):
         with tf.variable_scope('img_generator'):
             # layer 0: combines the conditional vec with the noise vec
             sen_rep = op.linear(sen_rep, 128, 'conditional_vec')
-            self.l0 = tf.concat(1, img_z, op.lrelu(sen_rep))
+            self.l0 = tf.concat(1, [img_z, op.lrelu(sen_rep)])
 
             # now, calculate the size of output during the deconv upsampling
             # note that we only use stride 2 during the conv
-            assert self.generator_l1_nchannel % 8 == 0, \
-                '[ERROR] Invalid channel size'
+            assert self.config.generator_l1_nchannel % 8 == 0, \
+                logger.error('[ERROR] Invalid channel size')
             l5_h, l5_w, l5_c = self.config.output_image_size, \
                 self.config.output_image_size, 3
             l4_h, l4_w, l4_c = l5_h / 2, l5_w / 2, \
-                self.generator_l1_nchannel / 8
+                self.config.generator_l1_nchannel / 8
             l3_h, l3_w, l3_c = l4_h / 2, l4_w / 2, l4_c * 2
             l2_h, l2_w, l2_c = l3_h / 2, l3_w / 2, l3_c * 2
             l1_h, l1_w, l1_c = l2_h / 2, l2_w / 2, l2_c * 2
@@ -48,32 +51,32 @@ class img_generator(object):
             # layer 1: the linear projection
             self.l1 = op.linear(self.l0, l1_w * l1_h * l1_c, 'l0_lin')
             self.l1 = tf.reshape(self.l1, [self.batch_size, l1_h, l1_w, l1_c])
-            self.l1_bn = op.batch_norm(name='l1_bn0', train=self.train)
-            self.l1 = tf.nn.relu(self.l1_bn(self.l1))
+            self.l1_bn = op.batch_norm(name='l1_bn0')
+            self.l1 = tf.nn.relu(self.l1_bn(self.l1, train=self.train))
 
             # layer 2: first conv1
             self.l2 = op.deconv2d(
                 self.l1, [self.batch_size, l2_h, l2_w, l2_c], name='l2')
-            self.l2_bn = op.batch_norm(name='l2_bn0', train=self.train)
-            self.l2 = tf.nn.relu(self.l2_bn(self.l2))
+            self.l2_bn = op.batch_norm(name='l2_bn0')
+            self.l2 = tf.nn.relu(self.l2_bn(self.l2, train=self.train))
 
             # layer 3: conv2
             self.l3 = op.deconv2d(
                 self.l2, [self.batch_size, l3_h, l3_w, l3_c], name='l3')
-            self.l3_bn = op.batch_norm(name='l3_bn0', train=self.train)
-            self.l3 = tf.nn.relu(self.l3_bn(self.l3))
+            self.l3_bn = op.batch_norm(name='l3_bn0')
+            self.l3 = tf.nn.relu(self.l3_bn(self.l3, train=self.train))
 
             # layer 4: conv4
             self.l4 = op.deconv2d(
                 self.l3, [self.batch_size, l4_h, l4_w, l4_c], name='l4')
-            self.l4_bn = op.batch_norm(name='l4_bn0', train=self.train)
-            self.l4 = tf.nn.relu(self.l4_bn(self.l4))
+            self.l4_bn = op.batch_norm(name='l4_bn0')
+            self.l4 = tf.nn.relu(self.l4_bn(self.l4, train=self.train))
 
             # layer 5: conv5 / final
             self.l5 = op.deconv2d(
                 self.l4, [self.batch_size, l5_h, l5_w, l5_c], name='l5')
-            self.l5_bn = op.batch_norm(name='l5_bn0', train=self.train)
-            self.l5 = tf.nn.relu(self.l5_bn(self.l5))
+            self.l5_bn = op.batch_norm(name='l5_bn0')
+            self.l5 = tf.nn.relu(self.l5_bn(self.l5, train=self.train))
 
             self.fake_img = tf.nn.tanh(self.l5)
             img_shape = self.fake_img.get_shape()
@@ -92,7 +95,7 @@ class img_discriminator(object):
     '''
         @brief:
             The img discriminator. we currently use the same structure described
-            in the 
+            in the paper.
         @components:
             def __init__
             def build_models
@@ -113,8 +116,8 @@ class img_discriminator(object):
         # in 'sen_test' or 'img_test' mode, only sentence or image encoder is
         # constucted
         assert self.stage in ['train', 'test', 'val'], \
-            logger.error('Invalid stage of the network.' + \
-            'Discriminator must work both with image and text')
+            logger.error('Invalid stage of the network.' +
+                         'Discriminator must work both with image and text')
 
     def build_models(self, image, sentence_vec):
         with tf.variable_scope('img_discriminator'):
@@ -129,30 +132,28 @@ class img_discriminator(object):
             l4_h, l4_w, l4_c = 4, 4, 512
 
             # layer 1
-            self.l1 = op.conv2d(self.img, 
-                                [self.batch_size, l1_h, l1_w, l1_c], 
-                                name='l1')
-            self.l1_bn = op.batch_norm(name='l1_bn0', train=self.train)
-            self.l1 = op.lrelu(self.l1_bn(self.l1))
-            
+            self.l1 = op.conv2d(self.img, l1_c, name='l1')
+            self.l1_bn = op.batch_norm(name='l1_bn0')
+            self.l1 = op.lrelu(self.l1_bn(self.l1, train=self.train))
+
             # layer 2
             self.l2 = op.conv2d(self.l1, l2_c, name='l2')
-            self.l2_bn = op.batch_norm(name='l2_bn0', train=self.train)
-            self.l2 = op.lrelu(self.l2_bn(self.l2))
+            self.l2_bn = op.batch_norm(name='l2_bn0')
+            self.l2 = op.lrelu(self.l2_bn(self.l2, train=self.train))
 
             # layer 3
             self.l3 = op.conv2d(self.l2, l3_c, name='l3')
-            self.l3_bn = op.batch_norm(name='l3_bn0', train=self.train)
-            self.l3 = op.lrelu(self.l3_bn(self.l3))
+            self.l3_bn = op.batch_norm(name='l3_bn0')
+            self.l3 = op.lrelu(self.l3_bn(self.l3, train=self.train))
 
             # layer 4
             self.l4 = op.conv2d(self.l3, l4_c, name='l4')
-            self.l4_bn = op.batch_norm(name='l4_bn0', train=self.train)
-            self.l4 = op.lrelu(self.l4_bn(self.l4))
+            self.l4_bn = op.batch_norm(name='l4_bn0')
+            self.l4 = op.lrelu(self.l4_bn(self.l4, train=self.train))
 
             # now self.l4 is size 4, 4, 512, we try to connect the text info
-            self.sentence_vec = tf.expand(self.sentence_vec, 1)
-            self.sentence_vec = tf.expand(self.sentence_vec, 2) 
+            self.sentence_vec = tf.expand_dims(self.sentence_vec, 1)
+            self.sentence_vec = tf.expand_dims(self.sentence_vec, 2)
             # batch, 1, 1, 128 to batch, 4, 4, 128
             self.sentence_vec = tf.tile(self.sentence_vec, [1, 4, 4, 1])
 
@@ -160,15 +161,14 @@ class img_discriminator(object):
 
             # layer 5
             self.l5 = op.conv2d(self.l4, l4_c, 1, 1, 1, 1, name='l5')
-            self.l5_bn = op.batch_norm(name='l5_bn0', train=self.train)
-            self.l5 = op.lrelu(self.l5_bn(self.l5))
+            self.l5_bn = op.batch_norm(name='l5_bn0')
+            self.l5 = op.lrelu(self.l5_bn(self.l5, train=self.train))
 
             # layer 6, actually it is different from the original paper..
             self.score = tf.nn.sigmoid(op.linear(
                 tf.reshape(self.l5, [self.batch_size, -1]), 1, 'final'))
 
         return
-
 
     def get_score(self):
         return self.score
@@ -205,13 +205,15 @@ class img_discriminator(object):
         return
     '''
 
+
 class sentence_generator(object):
     '''
         @brief:
             still not functional. Might be of later use
     '''
-    def __init__(self, config, stage='train', teacher_forcing=True, 
-            word_embedding=None):
+
+    def __init__(self, config, stage='train', teacher_forcing=True,
+                 word_embedding=None):
         self.config = config  # config is a python variable
         self.step = 0  # the num of step
         self.stage = stage  # train, test, val?
@@ -226,15 +228,15 @@ class sentence_generator(object):
         '''
         with tf.variable_scope('sen_generator'):
             # the conditional vector
-            self.l0 = tf.concat(1, self.sen_z, op.lrelu(self.img_rep))
+            self.l0 = tf.concat(1, [self.sen_z, op.lrelu(self.img_rep)])
 
             # layer 1, transform from the raw state to the initial state
             self.l1, self.h0_w, self.h0_b = op.linear(
                 self.l0, self.config.text_gen_hidden_dim, 'l0_lin', with_w=True)
             self.l1 = tf.reshape(self.l1, [self.batch_size,
                                            self.config.text_gen_hidden_dim])
-            self.l1_bn = op.batch_norm(name='l1_bn0', train=self.train)
-            self.l1 = tf.nn.relu(self.l1_bn(self.l1))
+            self.l1_bn = op.batch_norm(name='l1_bn0')
+            self.l1 = tf.nn.relu(self.l1_bn(self.l1, train=self.train))
 
             # layer 2, the rnn part
             cell = tf.nn.rnn_cell.GRUCell(self.config.text_gen_hidden_dim)

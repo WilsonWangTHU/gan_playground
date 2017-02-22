@@ -3,6 +3,8 @@
 #       In this place, we build the actual text-2-image network
 #   @author:
 #       Tingwu Wang, hmmm.....
+#   @possible compatible problems:
+#       1. sigmoid_cross_entropy_with_logits: labels / targets
 # -----------------------------------------------------------------------------
 
 import GAN
@@ -11,15 +13,17 @@ import os
 import tensorflow as tf
 import numpy as np
 from util import logger
+from util import compat_tf
 
 
 class TI_GAN(object):
     '''
         @brief
             in this network, we have a generator and a discriminator
-            note that the loss come from the {real img, right txt}, 
+            note that the loss come from the {real img, right txt},
             {real img, wrong txt} and {fake image, right txt}
     '''
+
     def __init__(self, config, stage='train'):
         '''
             @brief:
@@ -46,12 +50,13 @@ class TI_GAN(object):
         return
 
     def build_models(self):
+        logger.info('Building the text to image GAN model')
         # 1. real image and right text
         with tf.variable_scope(""):
             self.d_network_rr = GAN.img_discriminator(self.config, stage=self.stage)
             self.d_network_rr.build_models(self.real_img, self.real_sen_rep)
         score = self.d_network_rr.get_score()
-        loss_r = tf.nn.sigmoid_cross_entropy_with_logits(
+        loss_r = compat_tf.sigmoid_cross_entropy_with_logits(
             logits=score, labels=tf.ones_like(score))
         logger.info('loss from real image and right text generated')
 
@@ -60,7 +65,7 @@ class TI_GAN(object):
             self.d_network_rw = GAN.img_discriminator(self.config, stage=self.stage)
             self.d_network_rw.build_models(self.real_img, self.wrong_sen_rep)
         score = self.d_network_rw.get_score()
-        loss_w = tf.nn.sigmoid_cross_entropy_with_logits(
+        loss_w = compat_tf.sigmoid_cross_entropy_with_logits(
             logits=score, labels=tf.zeros_like(score))
         logger.info('loss from real image and wrong text generated')
 
@@ -73,19 +78,18 @@ class TI_GAN(object):
             self.d_network_wr = GAN.img_discriminator(self.config, stage=self.stage)
             self.d_network_wr.build_models(self.fake_img, self.wrong_sen_rep)
         fr_score = self.d_network_wr.get_score()
-        loss_f = tf.nn.sigmoid_cross_entropy_with_logits(
+        loss_f = compat_tf.sigmoid_cross_entropy_with_logits(
             logits=fr_score, labels=tf.zeros_like(fr_score))
         logger.info('loss from fake image and right text generated')
-
 
         # the loss of generator and the discriminator
         self.loss_d = tf.reduce_mean(loss_r) + \
             0.5 * tf.reduce_mean(loss_f) + 0.5 * tf.reduce_mean(loss_w)
-        
-        self.loss_g = tf.nn.sigmoid_cross_entropy_with_logits(
-            logits=fr_score, labels=tf.ones_like(fr_score))
-        return
 
+        self.loss_g = tf.reduce_mean(
+            compat_tf.sigmoid_cross_entropy_with_logits(
+                logits=fr_score, labels=tf.ones_like(fr_score)))
+        return
 
     def init_training(self, sess, restore_path):
         '''
@@ -101,25 +105,26 @@ class TI_GAN(object):
         self.d_optimizer = tf.train.AdamOptimizer(
             self.config.TRAIN.learning_rate, beta1=self.config.TRAIN.beta1,
             beta2=self.config.TRAIN.beta2).minimize(self.loss_d,
-                var_list=self.d_vars)
+                                                    var_list=self.d_vars)
 
         self.g_optimizer = tf.train.AdamOptimizer(
             self.config.TRAIN.learning_rate, beta1=self.config.TRAIN.beta1,
             beta2=self.config.TRAIN.beta2).minimize(self.loss_g,
-                var_list=self.g_vars)
+                                                    var_list=self.g_vars)
 
         # init the saver
         self.saver = tf.train.Saver()
 
         # get the variable initialized
         if restore_path is None:
-            init_op = tf.initialize_all_variables()
+            # init_op = tf.initialize_all_variables()
+            init_op = tf.global_variables_initializer()
             sess.run(init_op)
         else:
             self.restore(sess, restore_path)
         return
 
-    def train(self, sess, data_reader):
+    def train_net(self, sess, data_reader):
         while self.step < self.config.TRAIN.max_step_size:
             feed_dict = self.get_input_dict(data_reader)
 
@@ -131,8 +136,8 @@ class TI_GAN(object):
             _, loss_g = sess.run(
                 [self.g_optimizer, self.loss_g], feed_dict=feed_dict)
 
-            logger.info('step: {}, discriminator: loss {}, generator loss: {}'.\
-                format(self.step, loss_d, loss_g))
+            logger.info('step: {}, discriminator: loss {}, generator loss: {}'.
+                        format(self.step, loss_d, loss_g))
             self.step = self.step + 1
 
             # do test / sampling result once in a while
