@@ -4,7 +4,7 @@
 #   @author: Tingwu Wang, 21st, Feb, 2017
 # -----------------------------------------------------------------------------
 
-import __init_path
+import init_path
 from util import logger
 from model.tiGAN import TI_GAN
 from config import tiGAN_cfg as config
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     tigan_net.init_training(sess, args.restore)
 
     # get the data reader
-    dataset_dir = os.path.join(__init_path.get_base_dir(), 'data', 'data_dir')
+    dataset_dir = os.path.join(init_path.get_base_dir(), 'data', 'data_dir')
     data_reader = tiGAN_data_reader(dataset_name='bird',
                                     dataset_dir=dataset_dir, stage='train')
 

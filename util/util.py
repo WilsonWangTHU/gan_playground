@@ -39,6 +39,7 @@ class joint_embedding_data_reader():
         self.test_file_list = []
         self.validate_file_list = []
         self.data_id = 0
+        self.dataset_name = dataset_name
         self.dataset_dir = os.path.join(dataset_dir, dataset_name)
         self.stage = stage
         self.debug = debug
@@ -194,12 +195,19 @@ class tiGAN_data_reader():
         elif self.stage == 'test':
             self.file_list_in_use = self.test_file_list
 
-        del self.train_file_list
-        del self.test_file_list
-
         self.dataset_size = len(self.file_list_in_use)
-
+        self.get_vocab()
+        logger.info('data loader initialized')
         return
+
+    def get_vocab(self):
+        '''
+            @brief: useful when sampling
+        '''
+        file_abs_path = \
+            os.path.join(self.dataset_dir, 'vocab_c10.t7')
+        vocab = torchfile.load(file_abs_path)
+        self.vocab = {v: k for k, v in vocab.iteritems()}
 
     def split_dataset(self):
         '''
@@ -315,12 +323,50 @@ class tiGAN_data_reader():
     def num_data_in_use(self):
         return len(self.file_list_in_use)
 
+    def get_sample_data(self, sample_size):
+        # if stage = train, one image is paired with one text description
+        # otherwise we have batch_size of 1 with 5 ratio
+        real_text_req_list = []  # size [batch_size, 1024]
+        origin_text = []
+
+        for i_data in range(sample_size):
+
+            # the real text
+            tf_path = os.path.join(self.dataset_dir, 'raw_data',
+                                   self.test_file_list[i_data])
+            t7_loader = torchfile.load(tf_path)
+
+            # randomly choose one real text_rep and one fake text_rep
+            ran_int = random.randint(0, len(t7_loader['word'][0]) - 1)
+            real_text_req_list.append(t7_loader['txt'][ran_int, :])
+
+            # record the text at the same time
+            text = [self.vocab[word]
+                    for word in t7_loader['word'][:, ran_int]
+                    if word != 1]
+            text_string = ' '.join(text)
+            origin_text.append(text_string)
+
+            # increment on the data id
+            if i_data >= self.dataset_size:
+                logger.warning('running out of test set')
+                break
+
+        logger.info(
+            '[Sampling] New samples, total number: {}'.
+            format(len(real_text_req_list)))
+
+        return np.array(real_text_req_list), origin_text
+
     def active_shuffle(self):
         '''
             @brief: not sure if it is necessary
         '''
         random.shuffle(self.file_list_in_use)
         return
+
+    def get_dataset_name(self):
+        return self.dataset_name
 
 
 if __name__ == '__main__':

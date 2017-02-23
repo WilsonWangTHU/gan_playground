@@ -1,0 +1,22 @@
+[32m[0222 21:48:33 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0222-214833.log
+[32m[0222 21:48:33 @train_T2I.py:31][0m Session starts, using gpu: 0
+[32m[0222 21:48:33 @tiGAN.py:37][0m [31mWRN[0m test mode is not supported currently
+[32m[0222 21:48:33 @tiGAN.py:54][0m Building the text to image GAN model
+[32m[0222 21:48:35 @tiGAN.py:62][0m loss from real image and right text generated
+[32m[0222 21:48:35 @tiGAN.py:71][0m loss from real image and wrong text generated
+[32m[0222 21:48:36 @tiGAN.py:84][0m loss from fake image and right text generated
+[32m[0222 21:48:49 @util.py:185][0m trying to load the dataset bird
+[32m[0222 21:48:49 @util.py:228][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0222 21:48:49 @util.py:203][0m data loader initialized
+[32m[0222 21:48:49 @util.py:321][0m [LOAD BATCH] New batch, loading to id 16
+[32m[0222 21:48:53 @tiGAN.py:141][0m step: 0, discriminator: loss 1.45295810699, generator loss: 0.692597091198
+[32m[0222 21:48:53 @util.py:321][0m [LOAD BATCH] New batch, loading to id 32
+[32m[0222 21:48:56 @tiGAN.py:141][0m step: 1, discriminator: loss 1.37238693237, generator loss: 0.692484080791
+[32m[0222 21:48:56 @util.py:321][0m [LOAD BATCH] New batch, loading to id 48
+[32m[0222 21:48:59 @tiGAN.py:141][0m step: 2, discriminator: loss 1.35458827019, generator loss: 0.690652489662
+[32m[0222 21:49:00 @util.py:321][0m [LOAD BATCH] New batch, loading to id 64
+[32m[0222 21:49:02 @tiGAN.py:141][0m step: 3, discriminator: loss 1.35866773129, generator loss: 0.691247582436
+[32m[0222 21:49:03 @util.py:321][0m [LOAD BATCH] New batch, loading to id 80
+[32m[0222 21:49:06 @tiGAN.py:141][0m step: 4, discriminator: loss 1.37804639339, generator loss: 0.692923128605
+[32m[0222 21:49:17 @tiGAN.py:189][0m checkpoint saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_5.ckpt
+[32m[0222 21:49:17 @util.py:360][0m [Sampling] New samples, total number: 64

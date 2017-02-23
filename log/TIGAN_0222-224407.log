@@ -1,0 +1,59 @@
+[32m[0222 22:44:07 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0222-224407.log
+[32m[0222 22:44:07 @train_T2I.py:31][0m Session starts, using gpu: 0
+[32m[0222 22:44:07 @tiGAN.py:37][0m [31mWRN[0m test mode is not supported currently
+[32m[0222 22:44:07 @tiGAN.py:54][0m Building the text to image GAN model
+[32m[0222 22:44:09 @tiGAN.py:64][0m loss from real image and right text generated
+[32m[0222 22:44:09 @tiGAN.py:75][0m loss from real image and wrong text generated
+[32m[0222 22:44:10 @tiGAN.py:92][0m loss from fake image and right text generated
+[32m[0222 22:44:35 @util.py:182][0m trying to load the dataset bird
+[32m[0222 22:44:35 @util.py:225][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0222 22:44:35 @util.py:200][0m data loader initialized
+[32m[0222 22:44:36 @util.py:318][0m [LOAD BATCH] New batch, loading to id 16
+[32m[0222 22:44:39 @tiGAN.py:181][0m step: 0, discriminator: loss 1.52654266357, generator loss: 0.692515254021
+[32m[0222 22:44:40 @util.py:318][0m [LOAD BATCH] New batch, loading to id 32
+[32m[0222 22:44:43 @tiGAN.py:181][0m step: 1, discriminator: loss 1.37226998806, generator loss: 0.692698597908
+[32m[0222 22:44:43 @util.py:318][0m [LOAD BATCH] New batch, loading to id 48
+[32m[0222 22:44:46 @tiGAN.py:181][0m step: 2, discriminator: loss 1.35217738152, generator loss: 0.691573619843
+[32m[0222 22:44:46 @util.py:318][0m [LOAD BATCH] New batch, loading to id 64
+[32m[0222 22:44:49 @tiGAN.py:181][0m step: 3, discriminator: loss 1.3409204483, generator loss: 0.691757202148
+[32m[0222 22:44:50 @util.py:318][0m [LOAD BATCH] New batch, loading to id 80
+[32m[0222 22:44:53 @tiGAN.py:181][0m step: 4, discriminator: loss 1.39217615128, generator loss: 0.692945718765
+[32m[0222 22:45:03 @tiGAN.py:235][0m checkpoint saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_5.ckpt
+[32m[0222 22:45:03 @util.py:357][0m [Sampling] New samples, total number: 16
+[32m[0222 22:45:04 @tiGAN.py:226][0m Generated images are saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../data/data_dir/bird/sample/5
+[32m[0222 22:45:04 @util.py:318][0m [LOAD BATCH] New batch, loading to id 96
+[32m[0222 22:45:07 @tiGAN.py:181][0m step: 5, discriminator: loss 1.33606743813, generator loss: 0.692720293999
+[32m[0222 22:45:08 @util.py:318][0m [LOAD BATCH] New batch, loading to id 112
+[32m[0222 22:45:11 @tiGAN.py:181][0m step: 6, discriminator: loss 1.32172620296, generator loss: 0.692125439644
+[32m[0222 22:45:11 @util.py:318][0m [LOAD BATCH] New batch, loading to id 128
+[32m[0222 22:45:14 @tiGAN.py:181][0m step: 7, discriminator: loss 1.3190267086, generator loss: 0.691582798958
+[32m[0222 22:45:15 @util.py:318][0m [LOAD BATCH] New batch, loading to id 144
+[32m[0222 22:45:18 @tiGAN.py:181][0m step: 8, discriminator: loss 1.39490938187, generator loss: 0.69312286377
+[32m[0222 22:45:18 @util.py:318][0m [LOAD BATCH] New batch, loading to id 160
+[32m[0222 22:45:21 @tiGAN.py:181][0m step: 9, discriminator: loss 1.34007287025, generator loss: 0.693017423153
+[32m[0222 22:45:32 @tiGAN.py:235][0m checkpoint saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_10.ckpt
+[32m[0222 22:45:32 @util.py:357][0m [Sampling] New samples, total number: 16
+[32m[0222 22:45:32 @tiGAN.py:226][0m Generated images are saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../data/data_dir/bird/sample/10
+[32m[0222 22:45:33 @util.py:318][0m [LOAD BATCH] New batch, loading to id 176
+[32m[0222 22:45:36 @tiGAN.py:181][0m step: 10, discriminator: loss 1.34770178795, generator loss: 0.692987442017
+[32m[0222 22:45:36 @util.py:318][0m [LOAD BATCH] New batch, loading to id 192
+[32m[0222 22:45:39 @tiGAN.py:181][0m step: 11, discriminator: loss 1.32219028473, generator loss: 0.692907333374
+[32m[0222 22:45:40 @util.py:318][0m [LOAD BATCH] New batch, loading to id 208
+[32m[0222 22:45:43 @tiGAN.py:181][0m step: 12, discriminator: loss 1.32138037682, generator loss: 0.692017793655
+[32m[0222 22:45:43 @util.py:318][0m [LOAD BATCH] New batch, loading to id 224
+[32m[0222 22:45:47 @tiGAN.py:181][0m step: 13, discriminator: loss 1.32319247723, generator loss: 0.69195330143
+[32m[0222 22:45:47 @util.py:318][0m [LOAD BATCH] New batch, loading to id 240
+[32m[0222 22:45:50 @tiGAN.py:181][0m step: 14, discriminator: loss 1.39043319225, generator loss: 0.693143367767
+[32m[0222 22:46:00 @tiGAN.py:235][0m checkpoint saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_15.ckpt
+[32m[0222 22:46:00 @util.py:357][0m [Sampling] New samples, total number: 16
+[32m[0222 22:46:01 @tiGAN.py:226][0m Generated images are saved to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../data/data_dir/bird/sample/15
+[32m[0222 22:46:01 @util.py:318][0m [LOAD BATCH] New batch, loading to id 256
+[32m[0222 22:46:04 @tiGAN.py:181][0m step: 15, discriminator: loss 1.3469697237, generator loss: 0.693105220795
+[32m[0222 22:46:05 @util.py:318][0m [LOAD BATCH] New batch, loading to id 272
+[32m[0222 22:46:08 @tiGAN.py:181][0m step: 16, discriminator: loss 1.33946740627, generator loss: 0.693113863468
+[32m[0222 22:46:08 @util.py:318][0m [LOAD BATCH] New batch, loading to id 288
+[32m[0222 22:46:11 @tiGAN.py:181][0m step: 17, discriminator: loss 1.33022391796, generator loss: 0.693063020706
+[32m[0222 22:46:11 @util.py:318][0m [LOAD BATCH] New batch, loading to id 304
+[32m[0222 22:46:14 @tiGAN.py:181][0m step: 18, discriminator: loss 1.32394218445, generator loss: 0.69226205349
+[32m[0222 22:46:15 @util.py:318][0m [LOAD BATCH] New batch, loading to id 320
+[32m[0222 22:46:18 @tiGAN.py:181][0m step: 19, discriminator: loss 1.31872582436, generator loss: 0.690514445305
