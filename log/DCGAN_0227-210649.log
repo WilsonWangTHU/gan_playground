@@ -1,0 +1,16 @@
+[32m[0227 21:06:49 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/DCGAN_0227-210649.log
+[32m[0227 21:06:49 @DCGAN.py:38][0m [31mWRN[0m test mode is not supported currently
+[32m[0227 21:06:49 @train_T2I.py:35][0m Training DCGAN
+[32m[0227 21:06:51 @train_T2I.py:40][0m Session starts, using gpu: 0
+[32m[0227 21:06:51 @DCGAN.py:55][0m Building the text to image GAN model
+[32m[0227 21:06:54 @DCGAN.py:66][0m loss from real image generated
+[32m[0227 21:06:54 @GAN.py:29][0m Image generator in training mode: True
+[32m[0227 21:06:55 @DCGAN.py:83][0m loss from fake image and right text generated
+[32m[0227 21:06:55 @GAN.py:29][0m Image generator in training mode: False
+[32m[0227 21:07:01 @DCGAN.py:237][0m checkpoint restored from ../checkpoint/tigan_2000.ckpt
+[32m[0227 21:07:01 @DCGAN.py:238][0m continues from step 2000
+[32m[0227 21:07:07 @DCGAN.py:155][0m summary write initialized, writing to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../summary
+[32m[0227 21:07:07 @util.py:183][0m trying to load the dataset bird
+[32m[0227 21:07:07 @util.py:232][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0227 21:07:07 @util.py:207][0m data loader initialized
+[32m[0227 21:07:07 @train_T2I.py:52][0m Training starts, using gpu: 0

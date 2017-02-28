@@ -7,7 +7,7 @@
 #       1. sigmoid_cross_entropy_with_logits: labels / targets
 # -----------------------------------------------------------------------------
 
-import GAN
+import conGan as GAN
 import init_path
 import os
 import tensorflow as tf
@@ -57,10 +57,10 @@ class TI_GAN(object):
             self.d_network_rr = GAN.img_discriminator(
                 self.config, stage=self.stage)
             self.d_network_rr.build_models(self.real_img, self.real_sen_rep)
-        score = self.d_network_rr.get_score()
+        self.score_r = self.d_network_rr.get_score()
         self.loss_r = tf.reduce_mean(
             compat_tf.sigmoid_cross_entropy_with_logits(
-                logits=score, labels=tf.ones_like(score)))
+                logits=self.score_r, labels=tf.ones_like(self.score_r)))
         logger.info('loss from real image and right text generated')
 
         # 2. real image and wrong text
@@ -68,10 +68,10 @@ class TI_GAN(object):
             self.d_network_rw = GAN.img_discriminator(
                 self.config, stage=self.stage)
             self.d_network_rw.build_models(self.real_img, self.wrong_sen_rep)
-        score = self.d_network_rw.get_score()
+        self.score_rw = self.d_network_rw.get_score()
         self.loss_w = tf.reduce_mean(
             compat_tf.sigmoid_cross_entropy_with_logits(
-                logits=score, labels=tf.zeros_like(score)))
+                logits=self.score_rw, labels=tf.zeros_like(self.score_rw)))
         logger.info('loss from real image and wrong text generated')
 
         # 3. fake image and right text
@@ -85,18 +85,18 @@ class TI_GAN(object):
             self.d_network_wr = GAN.img_discriminator(
                 self.config, stage=self.stage)
             self.d_network_wr.build_models(self.fake_img, self.wrong_sen_rep)
-        fr_score = self.d_network_wr.get_score()
+        self.fr_score = self.d_network_wr.get_score()
         self.loss_f = tf.reduce_mean(
             compat_tf.sigmoid_cross_entropy_with_logits(
-                logits=fr_score, labels=tf.zeros_like(fr_score)))
+                logits=self.fr_score, labels=tf.zeros_like(self.fr_score)))
         logger.info('loss from fake image and right text generated')
 
         # the loss of generator and the discriminator
-        self.loss_d = self.loss_r + 0.5 * self.loss_f + 0.5 * self.loss_w
+        self.loss_d = self.loss_r + self.loss_f + self.loss_w
 
         self.loss_g = tf.reduce_mean(
             compat_tf.sigmoid_cross_entropy_with_logits(
-                logits=fr_score, labels=tf.ones_like(fr_score)))
+                logits=self.fr_score, labels=tf.ones_like(self.fr_score)))
 
         # build the sampler
         if build_sampler:
@@ -171,12 +171,16 @@ class TI_GAN(object):
             feed_dict = self.get_input_dict(data_reader)
 
             # train the discriminator
-            _, loss_d, dis_summary = sess.run(
-                [self.d_optimizer, self.loss_d, self.d_sum], feed_dict=feed_dict)
+            _, loss_d, score_r, score_rw, score_fr, dis_summary = sess.run(
+                [self.d_optimizer, self.loss_d,
+                    self.score_r, self.score_rw, self.fr_score,
+                    self.d_sum], feed_dict=feed_dict)
 
             # train the generator
-            _, loss_g, gen_summary = sess.run(
-                [self.g_optimizer, self.loss_g, self.g_sum], feed_dict=feed_dict)
+            _, loss_g, score_r, score_rw, score_fr, gen_summary = sess.run(
+                [self.g_optimizer, self.loss_g,
+                    self.score_r, self.score_rw, self.fr_score,
+                    self.g_sum], feed_dict=feed_dict)
 
             logger.info('step: {}, discriminator: loss {}, generator loss: {}'.
                         format(self.step, loss_d, loss_g))
@@ -214,12 +218,13 @@ class TI_GAN(object):
     def save_generated_imgs(self, fake_img, text, dataset_name):
         save_path = os.path.join(
             init_path.get_base_dir(), 'data', 'data_dir', dataset_name,
-            'sample', str(self.step))
+            'sample', 'tiGAN' + str(self.step))
 
         if not os.path.exists(save_path):  # make a dir for the new samples
             os.mkdir(save_path)
             logger.info('Making new directory {}'.format(save_path))
-        print fake_img.shape
+        fake_img = (fake_img + 1.0) * 255.0 / 2.0
+        fake_img = fake_img.astype('uint8')
 
         for i_img in range(len(text)):
             sio.imsave(os.path.join(save_path, text[i_img] + '.jpg'),
@@ -239,7 +244,7 @@ class TI_GAN(object):
     def restore(self, sess, restore_path):
         self.saver.restore(sess, restore_path)
         # we explicit keep a count of steps
-        self.step = str(restore_path.split('_')[1].split('.')[0])
+        self.step = int(str(restore_path.split('_')[1].split('.')[0]))
         logger.info('checkpoint restored from {}'.format(restore_path))
         logger.info('continues from step {}'.format(self.step))
         return

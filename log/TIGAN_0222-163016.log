@@ -1,8 +1,0 @@
-[32m[0222 16:30:16 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0222-163016.log
-[32m[0222 16:30:16 @train_T2I.py:31][0m Session starts, using gpu: 0
-[32m[0222 16:30:16 @tiGAN.py:36][0m [31mWRN[0m test mode is not supported currently
-[32m[0222 16:30:17 @tiGAN.py:60][0m loss from real image and right text generated
-[32m[0222 16:30:17 @tiGAN.py:69][0m loss from real image and wrong text generated
-[32m[0222 16:30:18 @tiGAN.py:82][0m loss from fake image and right text generated
-[32m[0222 16:30:31 @util.py:181][0m trying to load the dataset bird
-[32m[0222 16:30:31 @util.py:217][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy

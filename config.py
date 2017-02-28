@@ -28,7 +28,7 @@ __C_tiGAN.generator_l1_nchannel = 1024
 
 # basic training parameters
 __C_tiGAN.TRAIN.batch_size = 64
-__C_tiGAN.TRAIN.learning_rate = 0.0001
+__C_tiGAN.TRAIN.learning_rate = 0.0002
 __C_tiGAN.TRAIN.beta1 = 0.5
 __C_tiGAN.TRAIN.beta2 = 0.999
 __C_tiGAN.TRAIN.max_step_size = 100000

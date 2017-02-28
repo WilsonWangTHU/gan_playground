@@ -1,0 +1,255 @@
+# -----------------------------------------------------------------------------
+#   @brief:
+#       In this place, we build the actual text-2-image network
+#   @author:
+#       Tingwu Wang, hmmm.....
+#   @possible compatible problems:
+#       1. sigmoid_cross_entropy_with_logits: labels / targets
+#   @bugs... lets' start with DCGAN?
+# -----------------------------------------------------------------------------
+
+import GAN
+import init_path
+import os
+import tensorflow as tf
+import numpy as np
+import skimage.io as sio
+from util import logger
+from util import compat_tf
+
+
+class DC_GAN(object):
+    '''
+        @brief
+            in this network, we have a generator and a discriminator
+            note that the loss come from the {real img, right txt},
+            {real img, wrong txt} and {fake image, right txt}
+    '''
+
+    def __init__(self, config, stage='train'):
+        '''
+            @brief:
+                for the input, we have the noise input, the img input, the
+                text representation input
+        '''
+
+        assert stage in ['train', 'test'], \
+            logger.error('Invalid training stage')
+        logger.warning('test mode is not supported currently')
+        self.config = config
+        self.batch_size = config.TRAIN.batch_size
+        self.stage = stage
+        self.train = (self.stage == 'train')
+
+        # define the placeholders
+        self.noise_input = tf.placeholder(
+            tf.float32, [self.batch_size, self.config.z_dimension])
+        self.real_img = tf.placeholder(tf.float32, [self.batch_size, 64, 64, 3])
+        self.step = 0
+
+        return
+
+    def build_models(self, build_sampler=True):
+        logger.info('Building the text to image GAN model')
+        # 1. real image
+        with tf.variable_scope(""):
+            self.d_network_rr = GAN.img_discriminator(
+                self.config, stage=self.stage)
+            self.d_network_rr.build_models(self.real_img)
+        self.score_r = self.d_network_rr.get_score()
+        self.loss_r = tf.reduce_mean(
+            compat_tf.sigmoid_cross_entropy_with_logits(
+                logits=self.score_r, labels=tf.ones_like(self.score_r)))
+        self.real_pred = tf.reduce_mean(tf.sigmoid(self.score_r))
+        logger.info('loss from real image generated')
+
+        # 3. fake image
+        with tf.variable_scope(''):
+            self.g_network = GAN.img_generator(self.config, stage=self.stage)
+            self.g_network.build_image_generator(self.noise_input)
+            self.fake_img = self.g_network.get_fake_image()
+
+        with tf.variable_scope("", reuse=True):
+            self.d_network_wr = GAN.img_discriminator(
+                self.config, stage=self.stage)
+            self.d_network_wr.build_models(self.fake_img)
+        self.fr_score = self.d_network_wr.get_score()
+        self.loss_f = tf.reduce_mean(
+            compat_tf.sigmoid_cross_entropy_with_logits(
+                logits=self.fr_score, labels=tf.zeros_like(self.fr_score)))
+        self.fake_pred = tf.reduce_mean(tf.sigmoid(self.fr_score))
+        logger.info('loss from fake image and right text generated')
+
+        # the loss of generator and the discriminator
+        self.loss_d = self.loss_r + self.loss_f
+
+        self.loss_g = tf.reduce_mean(
+            compat_tf.sigmoid_cross_entropy_with_logits(
+                logits=self.fr_score, labels=tf.ones_like(self.fr_score)))
+
+        # build the sampler
+        if build_sampler:
+            with tf.variable_scope('', reuse=True):
+                self.sample_network = GAN.img_generator(
+                    self.config, stage='test')
+                self.sample_network.build_image_generator(
+                    self.noise_input)
+                self.sample_img = self.sample_network.get_fake_image()
+        return
+
+    def init_training(self, sess, restore_path):
+        '''
+            @brief:
+                define all the training paras and how to train it
+        '''
+        # get the training optimizer
+        t_vars = tf.trainable_variables()
+
+        self.g_vars = [var for var in t_vars if 'img_generator' in var.name]
+        self.d_vars = [var for var in t_vars if 'img_discriminator' in var.name]
+
+        self.d_optimizer = tf.train.AdamOptimizer(
+            self.config.TRAIN.learning_rate, beta1=self.config.TRAIN.beta1,
+            beta2=self.config.TRAIN.beta2).minimize(self.loss_d,
+                                                    var_list=self.d_vars)
+
+        self.g_optimizer = tf.train.AdamOptimizer(
+            self.config.TRAIN.learning_rate, beta1=self.config.TRAIN.beta1,
+            beta2=self.config.TRAIN.beta2).minimize(self.loss_g,
+                                                    var_list=self.g_vars)
+
+        # init the saver
+        self.saver = tf.train.Saver()
+
+        # get the variable initialized
+        if restore_path is None:
+            # init_op = tf.initialize_all_variables()
+            init_op = tf.global_variables_initializer()
+            sess.run(init_op)
+        else:
+            self.restore(sess, restore_path)
+
+        self.init_summary(sess)
+        return
+
+    def init_summary(self, sess):
+        self.loss_d_sum = tf.summary.scalar('discriminator_loss', self.loss_d)
+        self.loss_g_sum = tf.summary.scalar('generator_loss', self.loss_g)
+
+        self.loss_real_sum = tf.summary.scalar('real_d_loss', self.loss_r)
+        self.real_pred_sum = tf.summary.scalar('predict_real', self.real_pred)
+        self.loss_fake_sum = tf.summary.scalar('fake_d_loss', self.loss_f)
+        self.fake_pred_sum = tf.summary.scalar('predict_fake', self.fake_pred)
+
+        self.g_sum = tf.summary.merge(
+            [self.loss_g_sum, self.loss_fake_sum])
+
+        self.d_sum = tf.summary.merge(
+            [self.loss_d_sum, self.loss_real_sum, self.real_pred_sum, self.fake_pred_sum])
+
+        path = os.path.join(init_path.get_base_dir(), 'summary')
+        self.train_writer = tf.summary.FileWriter(path, sess.graph)
+
+        logger.info('summary write initialized, writing to {}'.format(path))
+
+        return
+
+    def train_net(self, sess, data_reader):
+        while self.step < self.config.TRAIN.max_step_size:
+            feed_dict = self.get_input_dict(data_reader)
+
+            # train the discriminator
+            _, loss_d, dis_summary = sess.run(
+                [self.d_optimizer, self.loss_d,
+                    self.d_sum], feed_dict=feed_dict)
+            # train the generator
+            _, loss_d, loss_g, gen_summary = sess.run(
+                [self.g_optimizer, self.loss_d, self.loss_g,
+                    self.g_sum], feed_dict=feed_dict)
+            logger.info('step: {}, discriminator: loss {}, generator loss: {}'.
+                        format(self.step, loss_d, loss_g))
+
+            # write the summary
+            self.train_writer.add_summary(gen_summary, self.step)
+            # self.train_writer.add_summary(dis_summary, self.step)
+            self.step = self.step + 1
+
+            # do test / sampling result once in a while
+            if np.mod(self.step, self.config.TRAIN.snapshot_step) == 1:
+                # save the check point
+                self.save(sess)
+
+                # do the sampling
+                self.do_sample(sess, data_reader)
+        return
+
+    def do_sample(self, sess, data_reader, save_img=True):
+        '''
+            @brief:
+                sample some result to visualize
+        '''
+        feed_dict, text = self.get_input_dict(data_reader, sampling=True)
+        fake_img = sess.run([self.sample_img], feed_dict=feed_dict)
+        fake_img = fake_img[0]
+
+        if save_img:
+            self.save_generated_imgs(fake_img, text,
+                                     data_reader.get_dataset_name())
+        else:
+            logger.warning('Generated images are not saved.')
+        return
+
+    def save_generated_imgs(self, fake_img, text, dataset_name):
+        save_path = os.path.join(
+            init_path.get_base_dir(), 'data', 'data_dir', dataset_name,
+            'sample', 'dcgan' + str(self.step))
+
+        if not os.path.exists(save_path):  # make a dir for the new samples
+            os.mkdir(save_path)
+            logger.info('Making new directory {}'.format(save_path))
+        fake_img = (fake_img + 1) * 255.0 / 2.0
+        assert (0 <= fake_img).all() and (fake_img <= 255).all()
+        fake_img = fake_img.astype('uint8')
+
+        for i_img in range(len(text)):
+            sio.imsave(os.path.join(save_path, text[i_img] + '.jpg'),
+                       fake_img[i_img])
+        logger.info('Generated images are saved to {}'.format(save_path))
+        return
+
+    def save(self, sess):
+        base_path = init_path.get_base_dir()
+        path = os.path.join(base_path,
+                            'checkpoint', 'dcgan_' + str(self.step) + '.ckpt')
+        self.saver.save(sess, path)
+
+        logger.info('checkpoint saved to {}'.format(path))
+        return
+
+    def restore(self, sess, restore_path):
+        self.saver.restore(sess, restore_path)
+        # we explicit keep a count of steps
+        self.step = int(str(restore_path.split('_')[1].split('.')[0]))
+        logger.info('checkpoint restored from {}'.format(restore_path))
+        logger.info('continues from step {}'.format(self.step))
+        return
+
+    def get_input_dict(self, data_reader, sampling=False):
+        '''
+            @brief: return the feed dict
+        '''
+        feed_dict = {}
+
+        feed_dict[self.noise_input] = np.random.uniform(
+            -1, 1, [self.batch_size, self.config.z_dimension])
+
+        if not sampling:
+            feed_dict[self.real_img], _, \
+                _ = \
+                data_reader.next_batch(self.batch_size)
+            return feed_dict
+        else:
+            _, origin_text = \
+                data_reader.get_sample_data(
+                    self.config.TEST.sample_size)
+            return feed_dict, origin_text

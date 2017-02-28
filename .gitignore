@@ -4,3 +4,5 @@
 *.jpg
 *.npy
 *.t7
+events.*
+checkpoint/

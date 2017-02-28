@@ -1,0 +1,5 @@
+[32m[0227 16:38:02 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0227-163802.log
+[32m[0227 16:38:02 @train_T2I.py:31][0m Session starts, using gpu: 0
+[32m[0227 16:38:02 @tiGAN.py:38][0m [31mWRN[0m test mode is not supported currently
+[32m[0227 16:38:03 @tiGAN.py:55][0m Building the text to image GAN model
+[32m[0227 16:38:03 @tiGAN.py:66][0m loss from real image generated

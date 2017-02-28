@@ -1,2 +1,2 @@
-model_checkpoint_path: "/ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_5.ckpt"
-all_model_checkpoint_paths: "/ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_5.ckpt"
+model_checkpoint_path: "/ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_2000.ckpt"
+all_model_checkpoint_paths: "/ais/gobi4/tingwuwang/joint_embedding/tool/../model/../checkpoint/tigan_2000.ckpt"

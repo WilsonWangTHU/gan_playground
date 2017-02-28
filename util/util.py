@@ -174,7 +174,8 @@ class tiGAN_data_reader():
         @brief: load data from the bird dataset
     '''
 
-    def __init__(self, dataset_name='bird', dataset_dir=None, stage='train'):
+    def __init__(self, dataset_name='bird', dataset_dir=None, stage='train',
+                 debug=False):
 
         # make sure the data dir is initialized and valid
         assert dataset_name in ['bird'], logger.error('Invalid dataset name')
@@ -194,6 +195,12 @@ class tiGAN_data_reader():
             self.file_list_in_use = self.train_file_list
         elif self.stage == 'test':
             self.file_list_in_use = self.test_file_list
+
+        '''
+        if False:
+            self.file_list_in_use = self.file_list_in_use[0:16]
+            self.test_file_list = self.file_list_in_use[0:16]
+        '''
 
         self.dataset_size = len(self.file_list_in_use)
         self.get_vocab()
@@ -283,6 +290,9 @@ class tiGAN_data_reader():
                                    self.file_list_in_use[self.data_id])
             t7_loader = torchfile.load(tf_path)
 
+            image_path = os.path.join(self.dataset_dir, t7_loader['img'])
+            image_list.append(load_image(image_path, img_size=64))
+
             # the mismatched text representation
             fake_id = np.mod(
                 self.data_id + random.randint(1, self.dataset_size - 1),
@@ -290,10 +300,6 @@ class tiGAN_data_reader():
             tf_path = os.path.join(self.dataset_dir, 'raw_data',
                                    self.file_list_in_use[fake_id])
             fake_t7_loader = torchfile.load(tf_path)
-
-            image_path = os.path.join(self.dataset_dir, t7_loader['img'])
-            image_list.append(load_image(image_path, img_size=64))
-
             if self.stage == 'train':
                 # randomly choose one real text_rep and one fake text_rep
                 ran_int = random.randint(0, len(t7_loader['word'][0]) - 1)

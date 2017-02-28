@@ -1,4 +1,0 @@
-[32m[0220 15:04:18 @logger.py:67][0m Log file set to /home/wtw/joint_embedding/tool/test_logger.py/../../log/0220-150418.log
-[32m[0220 15:04:18 @test_logger.py:6][0m it is a test
-[32m[0220 15:04:18 @test_logger.py:8][0m [31mWRN[0m it is a test
-[32m[0220 15:04:18 @test_logger.py:9][0m [4m[31mERR[0m it is a test

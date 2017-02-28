@@ -1,0 +1,158 @@
+[32m[0227 21:11:33 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/DCGAN_0227-211133.log
+[32m[0227 21:11:33 @DCGAN.py:38][0m [31mWRN[0m test mode is not supported currently
+[32m[0227 21:11:33 @train_T2I.py:35][0m Training DCGAN
+[32m[0227 21:11:36 @train_T2I.py:40][0m Session starts, using gpu: 0
+[32m[0227 21:11:36 @DCGAN.py:55][0m Building the text to image GAN model
+[32m[0227 21:11:37 @DCGAN.py:66][0m loss from real image generated
+[32m[0227 21:11:37 @GAN.py:29][0m Image generator in training mode: True
+[32m[0227 21:11:38 @DCGAN.py:83][0m loss from fake image and right text generated
+[32m[0227 21:11:38 @GAN.py:29][0m Image generator in training mode: False
+[32m[0227 21:11:44 @DCGAN.py:235][0m checkpoint restored from ../checkpoint/tigan_2000.ckpt
+[32m[0227 21:11:44 @DCGAN.py:236][0m continues from step 2000
+[32m[0227 21:11:50 @DCGAN.py:155][0m summary write initialized, writing to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../summary
+[32m[0227 21:11:50 @util.py:183][0m trying to load the dataset bird
+[32m[0227 21:11:50 @util.py:232][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0227 21:11:50 @util.py:207][0m data loader initialized
+[32m[0227 21:11:50 @train_T2I.py:54][0m Training starts, using gpu: 0
+[32m[0227 21:11:56 @util.py:324][0m [LOAD BATCH] New batch, loading to id 64
+[32m[0227 21:11:58 @DCGAN.py:172][0m step: 2000, discriminator: loss 0.248021841049, generator loss: 4.18244171143
+[32m[0227 21:12:00 @util.py:324][0m [LOAD BATCH] New batch, loading to id 128
+[32m[0227 21:12:00 @DCGAN.py:172][0m step: 2001, discriminator: loss 0.176081284881, generator loss: 3.36994361877
+[32m[0227 21:12:02 @util.py:324][0m [LOAD BATCH] New batch, loading to id 192
+[32m[0227 21:12:02 @DCGAN.py:172][0m step: 2002, discriminator: loss 0.354338169098, generator loss: 5.00115776062
+[32m[0227 21:12:04 @util.py:324][0m [LOAD BATCH] New batch, loading to id 256
+[32m[0227 21:12:04 @DCGAN.py:172][0m step: 2003, discriminator: loss 0.145319640636, generator loss: 3.2299478054
+[32m[0227 21:12:06 @util.py:324][0m [LOAD BATCH] New batch, loading to id 320
+[32m[0227 21:12:07 @DCGAN.py:172][0m step: 2004, discriminator: loss 0.25594612956, generator loss: 4.58380413055
+[32m[0227 21:12:09 @util.py:324][0m [LOAD BATCH] New batch, loading to id 384
+[32m[0227 21:12:09 @DCGAN.py:172][0m step: 2005, discriminator: loss 0.18124833703, generator loss: 4.66990470886
+[32m[0227 21:12:11 @util.py:324][0m [LOAD BATCH] New batch, loading to id 448
+[32m[0227 21:12:11 @DCGAN.py:172][0m step: 2006, discriminator: loss 0.154504626989, generator loss: 4.19377040863
+[32m[0227 21:12:13 @util.py:324][0m [LOAD BATCH] New batch, loading to id 512
+[32m[0227 21:12:13 @DCGAN.py:172][0m step: 2007, discriminator: loss 0.172964900732, generator loss: 3.72472143173
+[32m[0227 21:12:15 @util.py:324][0m [LOAD BATCH] New batch, loading to id 576
+[32m[0227 21:12:15 @DCGAN.py:172][0m step: 2008, discriminator: loss 0.187351435423, generator loss: 5.1117401123
+[32m[0227 21:12:17 @util.py:324][0m [LOAD BATCH] New batch, loading to id 640
+[32m[0227 21:12:17 @DCGAN.py:172][0m step: 2009, discriminator: loss 0.137240171432, generator loss: 3.23353886604
+[32m[0227 21:12:19 @util.py:324][0m [LOAD BATCH] New batch, loading to id 704
+[32m[0227 21:12:19 @DCGAN.py:172][0m step: 2010, discriminator: loss 0.37039116025, generator loss: 6.37880277634
+[32m[0227 21:12:21 @util.py:324][0m [LOAD BATCH] New batch, loading to id 768
+[32m[0227 21:12:22 @DCGAN.py:172][0m step: 2011, discriminator: loss 0.0922474116087, generator loss: 4.59488725662
+[32m[0227 21:12:24 @util.py:324][0m [LOAD BATCH] New batch, loading to id 832
+[32m[0227 21:12:24 @DCGAN.py:172][0m step: 2012, discriminator: loss 0.106853067875, generator loss: 3.1361784935
+[32m[0227 21:12:26 @util.py:324][0m [LOAD BATCH] New batch, loading to id 896
+[32m[0227 21:12:26 @DCGAN.py:172][0m step: 2013, discriminator: loss 0.613982200623, generator loss: 6.16479682922
+[32m[0227 21:12:28 @util.py:324][0m [LOAD BATCH] New batch, loading to id 960
+[32m[0227 21:12:28 @DCGAN.py:172][0m step: 2014, discriminator: loss 0.103222936392, generator loss: 3.42714881897
+[32m[0227 21:12:30 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1024
+[32m[0227 21:12:30 @DCGAN.py:172][0m step: 2015, discriminator: loss 0.233752980828, generator loss: 4.55048942566
+[32m[0227 21:12:32 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1088
+[32m[0227 21:12:32 @DCGAN.py:172][0m step: 2016, discriminator: loss 0.182475462556, generator loss: 4.3468337059
+[32m[0227 21:12:34 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1152
+[32m[0227 21:12:34 @DCGAN.py:172][0m step: 2017, discriminator: loss 0.15426787734, generator loss: 3.43814182281
+[32m[0227 21:12:36 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1216
+[32m[0227 21:12:36 @DCGAN.py:172][0m step: 2018, discriminator: loss 0.384992241859, generator loss: 5.17045688629
+[32m[0227 21:12:38 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1280
+[32m[0227 21:12:38 @DCGAN.py:172][0m step: 2019, discriminator: loss 0.188664034009, generator loss: 2.41840267181
+[32m[0227 21:12:40 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1344
+[32m[0227 21:12:40 @DCGAN.py:172][0m step: 2020, discriminator: loss 0.697580337524, generator loss: 7.95254325867
+[32m[0227 21:12:42 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1408
+[32m[0227 21:12:42 @DCGAN.py:172][0m step: 2021, discriminator: loss 0.0898877680302, generator loss: 3.67185544968
+[32m[0227 21:12:44 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1472
+[32m[0227 21:12:45 @DCGAN.py:172][0m step: 2022, discriminator: loss 0.0683042183518, generator loss: 3.80782747269
+[32m[0227 21:12:46 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1536
+[32m[0227 21:12:47 @DCGAN.py:172][0m step: 2023, discriminator: loss 0.650009155273, generator loss: 6.58008289337
+[32m[0227 21:12:49 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1600
+[32m[0227 21:12:49 @DCGAN.py:172][0m step: 2024, discriminator: loss 0.101145118475, generator loss: 4.87509250641
+[32m[0227 21:12:51 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1664
+[32m[0227 21:12:51 @DCGAN.py:172][0m step: 2025, discriminator: loss 0.197539150715, generator loss: 2.32804822922
+[32m[0227 21:12:53 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1728
+[32m[0227 21:12:53 @DCGAN.py:172][0m step: 2026, discriminator: loss 0.892466247082, generator loss: 7.83680915833
+[32m[0227 21:12:55 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1792
+[32m[0227 21:12:55 @DCGAN.py:172][0m step: 2027, discriminator: loss 0.0888620018959, generator loss: 4.55324840546
+[32m[0227 21:12:57 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1856
+[32m[0227 21:12:57 @DCGAN.py:172][0m step: 2028, discriminator: loss 0.281695991755, generator loss: 1.98279714584
+[32m[0227 21:12:59 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1920
+[32m[0227 21:12:59 @DCGAN.py:172][0m step: 2029, discriminator: loss 0.500178396702, generator loss: 6.91850948334
+[32m[0227 21:13:01 @util.py:324][0m [LOAD BATCH] New batch, loading to id 1984
+[32m[0227 21:13:01 @DCGAN.py:172][0m step: 2030, discriminator: loss 0.159948468208, generator loss: 5.39743089676
+[32m[0227 21:13:03 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2048
+[32m[0227 21:13:03 @DCGAN.py:172][0m step: 2031, discriminator: loss 0.242085859179, generator loss: 2.24901938438
+[32m[0227 21:13:05 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2112
+[32m[0227 21:13:05 @DCGAN.py:172][0m step: 2032, discriminator: loss 0.366172641516, generator loss: 6.63753938675
+[32m[0227 21:13:07 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2176
+[32m[0227 21:13:07 @DCGAN.py:172][0m step: 2033, discriminator: loss 0.118906281888, generator loss: 3.7031917572
+[32m[0227 21:13:09 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2240
+[32m[0227 21:13:09 @DCGAN.py:172][0m step: 2034, discriminator: loss 0.108740985394, generator loss: 3.78767633438
+[32m[0227 21:13:11 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2304
+[32m[0227 21:13:11 @DCGAN.py:172][0m step: 2035, discriminator: loss 0.569579958916, generator loss: 5.83795785904
+[32m[0227 21:13:12 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2368
+[32m[0227 21:13:13 @DCGAN.py:172][0m step: 2036, discriminator: loss 0.140056431293, generator loss: 3.2464466095
+[32m[0227 21:13:14 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2432
+[32m[0227 21:13:15 @DCGAN.py:172][0m step: 2037, discriminator: loss 0.146660119295, generator loss: 3.61807250977
+[32m[0227 21:13:16 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2496
+[32m[0227 21:13:17 @DCGAN.py:172][0m step: 2038, discriminator: loss 0.847903728485, generator loss: 6.83457756042
+[32m[0227 21:13:18 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2560
+[32m[0227 21:13:19 @DCGAN.py:172][0m step: 2039, discriminator: loss 0.351945102215, generator loss: 1.71706056595
+[32m[0227 21:13:21 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2624
+[32m[0227 21:13:21 @DCGAN.py:172][0m step: 2040, discriminator: loss 0.513987839222, generator loss: 7.77459621429
+[32m[0227 21:13:23 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2688
+[32m[0227 21:13:23 @DCGAN.py:172][0m step: 2041, discriminator: loss 0.0907199159265, generator loss: 5.58854627609
+[32m[0227 21:13:25 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2752
+[32m[0227 21:13:25 @DCGAN.py:172][0m step: 2042, discriminator: loss 0.106347411871, generator loss: 3.40539693832
+[32m[0227 21:13:27 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2816
+[32m[0227 21:13:27 @DCGAN.py:172][0m step: 2043, discriminator: loss 0.233938723803, generator loss: 5.57732057571
+[32m[0227 21:13:28 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2880
+[32m[0227 21:13:29 @DCGAN.py:172][0m step: 2044, discriminator: loss 0.171566367149, generator loss: 2.9726099968
+[32m[0227 21:13:30 @util.py:324][0m [LOAD BATCH] New batch, loading to id 2944
+[32m[0227 21:13:31 @DCGAN.py:172][0m step: 2045, discriminator: loss 0.184790015221, generator loss: 4.02576112747
+[32m[0227 21:13:32 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3008
+[32m[0227 21:13:32 @DCGAN.py:172][0m step: 2046, discriminator: loss 0.262345820665, generator loss: 4.10563659668
+[32m[0227 21:13:34 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3072
+[32m[0227 21:13:34 @DCGAN.py:172][0m step: 2047, discriminator: loss 0.156503453851, generator loss: 2.66062068939
+[32m[0227 21:13:36 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3136
+[32m[0227 21:13:36 @DCGAN.py:172][0m step: 2048, discriminator: loss 0.298473030329, generator loss: 5.30107688904
+[32m[0227 21:13:38 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3200
+[32m[0227 21:13:38 @DCGAN.py:172][0m step: 2049, discriminator: loss 0.114535436034, generator loss: 3.78023219109
+[32m[0227 21:13:40 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3264
+[32m[0227 21:13:40 @DCGAN.py:172][0m step: 2050, discriminator: loss 0.151562258601, generator loss: 3.74953150749
+[32m[0227 21:13:42 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3328
+[32m[0227 21:13:42 @DCGAN.py:172][0m step: 2051, discriminator: loss 0.178872108459, generator loss: 3.37583136559
+[32m[0227 21:13:44 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3392
+[32m[0227 21:13:44 @DCGAN.py:172][0m step: 2052, discriminator: loss 0.189921557903, generator loss: 4.14984512329
+[32m[0227 21:13:46 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3456
+[32m[0227 21:13:46 @DCGAN.py:172][0m step: 2053, discriminator: loss 0.16341766715, generator loss: 3.6076900959
+[32m[0227 21:13:48 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3520
+[32m[0227 21:13:48 @DCGAN.py:172][0m step: 2054, discriminator: loss 0.187235146761, generator loss: 3.39371681213
+[32m[0227 21:13:50 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3584
+[32m[0227 21:13:50 @DCGAN.py:172][0m step: 2055, discriminator: loss 0.200728371739, generator loss: 4.24123430252
+[32m[0227 21:13:52 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3648
+[32m[0227 21:13:52 @DCGAN.py:172][0m step: 2056, discriminator: loss 0.155050724745, generator loss: 3.09871196747
+[32m[0227 21:13:53 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3712
+[32m[0227 21:13:54 @DCGAN.py:172][0m step: 2057, discriminator: loss 0.140171453357, generator loss: 4.13783931732
+[32m[0227 21:13:55 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3776
+[32m[0227 21:13:55 @DCGAN.py:172][0m step: 2058, discriminator: loss 0.162905335426, generator loss: 3.09651899338
+[32m[0227 21:13:57 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3840
+[32m[0227 21:13:57 @DCGAN.py:172][0m step: 2059, discriminator: loss 0.281387746334, generator loss: 4.90848445892
+[32m[0227 21:13:59 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3904
+[32m[0227 21:13:59 @DCGAN.py:172][0m step: 2060, discriminator: loss 0.113864466548, generator loss: 3.70970821381
+[32m[0227 21:14:01 @util.py:324][0m [LOAD BATCH] New batch, loading to id 3968
+[32m[0227 21:14:01 @DCGAN.py:172][0m step: 2061, discriminator: loss 0.128835588694, generator loss: 3.12428379059
+[32m[0227 21:14:03 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4032
+[32m[0227 21:14:03 @DCGAN.py:172][0m step: 2062, discriminator: loss 0.361471921206, generator loss: 5.77166414261
+[32m[0227 21:14:05 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4096
+[32m[0227 21:14:05 @DCGAN.py:172][0m step: 2063, discriminator: loss 0.174554854631, generator loss: 2.31164765358
+[32m[0227 21:14:07 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4160
+[32m[0227 21:14:07 @DCGAN.py:172][0m step: 2064, discriminator: loss 0.515844762325, generator loss: 7.11458444595
+[32m[0227 21:14:09 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4224
+[32m[0227 21:14:09 @DCGAN.py:172][0m step: 2065, discriminator: loss 0.117790386081, generator loss: 3.41171216965
+[32m[0227 21:14:10 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4288
+[32m[0227 21:14:11 @DCGAN.py:172][0m step: 2066, discriminator: loss 0.0856838524342, generator loss: 4.1964635849
+[32m[0227 21:14:12 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4352
+[32m[0227 21:14:12 @DCGAN.py:172][0m step: 2067, discriminator: loss 0.22629699111, generator loss: 5.38220834732
+[32m[0227 21:14:14 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4416
+[32m[0227 21:14:15 @DCGAN.py:172][0m step: 2068, discriminator: loss 0.178980365396, generator loss: 2.52995872498
+[32m[0227 21:14:16 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4480
+[32m[0227 21:14:16 @DCGAN.py:172][0m step: 2069, discriminator: loss 0.520584762096, generator loss: 7.03522014618
+[32m[0227 21:14:18 @util.py:324][0m [LOAD BATCH] New batch, loading to id 4544
+[32m[0227 21:14:18 @DCGAN.py:172][0m step: 2070, discriminator: loss 0.0941463261843, generator loss: 4.66345024109

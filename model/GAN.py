@@ -6,7 +6,6 @@
 #       And there is a lot of fun to do with the GAN at hand
 #   @author: Tingwu Wang, Feb., 20th, 2017
 #   @possible compatible problem:
-#       1. tf.expand / tf.expand_dims
 # -----------------------------------------------------------------------------
 
 
@@ -27,56 +26,42 @@ class img_generator(object):
         self.step = 0  # the num of step
         self.stage = stage  # train, test, val?
         self.train = (self.stage == 'train')
+        logger.info('Image generator in training mode: {}'.format(self.train))
         self.batch_size = self.config.TRAIN.batch_size
 
-    def build_image_generator(self, img_z, sen_rep):
+    def build_image_generator(self, img_z):
         with tf.variable_scope('img_generator'):
-            # layer 0: combines the conditional vec with the noise vec
-            sen_rep = op.linear(sen_rep, 128, 'conditional_vec')
-            self.l0 = tf.concat(1, [img_z, op.lrelu(sen_rep)])
-
-            # now, calculate the size of output during the deconv upsampling
-            # note that we only use stride 2 during the conv
-            assert self.config.generator_l1_nchannel % 8 == 0, \
-                logger.error('[ERROR] Invalid channel size')
-            l5_h, l5_w, l5_c = self.config.output_image_size, \
-                self.config.output_image_size, 3
-            l4_h, l4_w, l4_c = l5_h / 2, l5_w / 2, \
-                self.config.generator_l1_nchannel / 8
-            l3_h, l3_w, l3_c = l4_h / 2, l4_w / 2, l4_c * 2
-            l2_h, l2_w, l2_c = l3_h / 2, l3_w / 2, l3_c * 2
-            l1_h, l1_w, l1_c = l2_h / 2, l2_w / 2, l2_c * 2
-
-            # construct the network layer by layer
-            # layer 1: the linear projection
-            self.l1 = op.linear(self.l0, l1_w * l1_h * l1_c, 'l0_lin')
-            self.l1 = tf.reshape(self.l1, [self.batch_size, l1_h, l1_w, l1_c])
+            nf = 64
+            # layer 1: a projection after the noise into 4, 4, 512
+            self.l1 = op.linear(img_z, nf * 8 * 4 * 4)  # 'l0_b*[4*4*512]'
+            self.l1 = tf.reshape(self.l1, [self.batch_size, 4, 4, nf * 8])  # 'l0_b*4*4*4*512')
             self.l1_bn = op.batch_norm(name='l1_bn0')
             self.l1 = tf.nn.relu(self.l1_bn(self.l1, train=self.train))
+            print ('name: {}, size: {}'.format(self.l1.name, self.l1.get_shape()))
 
             # layer 2: first conv1
             self.l2 = op.deconv2d(
-                self.l1, [self.batch_size, l2_h, l2_w, l2_c], name='l2')
+                self.l1, [self.batch_size, 8, 8, nf * 4], name='l2')
             self.l2_bn = op.batch_norm(name='l2_bn0')
             self.l2 = tf.nn.relu(self.l2_bn(self.l2, train=self.train))
 
             # layer 3: conv2
             self.l3 = op.deconv2d(
-                self.l2, [self.batch_size, l3_h, l3_w, l3_c], name='l3')
+                self.l2, [self.batch_size, 16, 16, nf * 2], name='l3')
             self.l3_bn = op.batch_norm(name='l3_bn0')
             self.l3 = tf.nn.relu(self.l3_bn(self.l3, train=self.train))
 
             # layer 4: conv4
             self.l4 = op.deconv2d(
-                self.l3, [self.batch_size, l4_h, l4_w, l4_c], name='l4')
+                self.l3, [self.batch_size, 32, 32, nf], name='l4')
             self.l4_bn = op.batch_norm(name='l4_bn0')
             self.l4 = tf.nn.relu(self.l4_bn(self.l4, train=self.train))
 
             # layer 5: conv5 / final
             self.l5 = op.deconv2d(
-                self.l4, [self.batch_size, l5_h, l5_w, l5_c], name='l5')
-            self.l5_bn = op.batch_norm(name='l5_bn0')
-            self.l5 = tf.nn.relu(self.l5_bn(self.l5, train=self.train))
+                self.l4, [self.batch_size, 64, 64, 3], name='l5')
+            # self.l5_bn = op.batch_norm(name='l5_bn0')
+            # self.l5 = tf.nn.relu(self.l5_bn(self.l5, train=self.train))
 
             self.fake_img = tf.nn.tanh(self.l5)
             img_shape = self.fake_img.get_shape()
@@ -119,55 +104,35 @@ class img_discriminator(object):
             logger.error('Invalid stage of the network.' +
                          'Discriminator must work both with image and text')
 
-    def build_models(self, image, sentence_vec):
+    def build_models(self, image):
         with tf.variable_scope('img_discriminator'):
+            nf = 64
             self.img = image  # size 64, 64, 3
-            self.sentence_vec = op.linear(
-                sentence_vec, 128, 'conditional_vec')  # size [batch, 128]
-
-            # set the size of each layer first, we have four conv layer
-            l1_h, l1_w, l1_c = 32, 32, 64
-            l2_h, l2_w, l2_c = 16, 16, 128
-            l3_h, l3_w, l3_c = 8, 8, 256
-            l4_h, l4_w, l4_c = 4, 4, 512
 
             # layer 1
-            self.l1 = op.conv2d(self.img, l1_c, name='l1')
-            self.l1_bn = op.batch_norm(name='l1_bn0')
-            self.l1 = op.lrelu(self.l1_bn(self.l1, train=self.train))
+            self.l1 = op.conv2d(self.img, nf, name='l1')
+            self.l1 = op.lrelu(self.l1)
+            # self.l1_bn = op.batch_norm(name='l1_bn0')
+            # self.l1 = op.lrelu(self.l1_bn(self.l1, train=self.train))
 
             # layer 2
-            self.l2 = op.conv2d(self.l1, l2_c, name='l2')
+            self.l2 = op.conv2d(self.l1, nf * 2, name='l2')
             self.l2_bn = op.batch_norm(name='l2_bn0')
             self.l2 = op.lrelu(self.l2_bn(self.l2, train=self.train))
 
             # layer 3
-            self.l3 = op.conv2d(self.l2, l3_c, name='l3')
+            self.l3 = op.conv2d(self.l2, nf * 4, name='l3')
             self.l3_bn = op.batch_norm(name='l3_bn0')
             self.l3 = op.lrelu(self.l3_bn(self.l3, train=self.train))
 
             # layer 4
-            self.l4 = op.conv2d(self.l3, l4_c, name='l4')
+            self.l4 = op.conv2d(self.l3, nf * 8, name='l4')
             self.l4_bn = op.batch_norm(name='l4_bn0')
             self.l4 = op.lrelu(self.l4_bn(self.l4, train=self.train))
 
-            # now self.l4 is size 4, 4, 512, we try to connect the text info
-            self.sentence_vec = tf.expand_dims(self.sentence_vec, 1)
-            self.sentence_vec = tf.expand_dims(self.sentence_vec, 2)
-            # batch, 1, 1, 128 to batch, 4, 4, 128
-            self.sentence_vec = tf.tile(self.sentence_vec, [1, 4, 4, 1])
-
-            self.l4 = tf.concat(3, [self.l4, self.sentence_vec])
-
-            # layer 5
-            self.l5 = op.conv2d(self.l4, l4_c, 1, 1, 1, 1, name='l5')
-            self.l5_bn = op.batch_norm(name='l5_bn0')
-            self.l5 = op.lrelu(self.l5_bn(self.l5, train=self.train))
-
             # layer 6, actually it is different from the original paper..
-            self.score = tf.nn.sigmoid(op.linear(
-                tf.reshape(self.l5, [self.batch_size, -1]), 1, 'final'))
-
+            self.score = op.linear(
+                tf.reshape(self.l4, [self.batch_size, -1]), 1, 'final')
         return
 
     def get_score(self):

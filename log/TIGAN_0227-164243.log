@@ -1,0 +1,36 @@
+[32m[0227 16:42:43 @logger.py:67][0m Log file set to /ais/gobi4/tingwuwang/joint_embedding/tool/train_T2I.py/../../log/TIGAN_0227-164243.log
+[32m[0227 16:42:43 @train_T2I.py:31][0m Session starts, using gpu: 0
+[32m[0227 16:42:43 @tiGAN.py:38][0m [31mWRN[0m test mode is not supported currently
+[32m[0227 16:42:43 @tiGAN.py:55][0m Building the text to image GAN model
+[32m[0227 16:42:47 @tiGAN.py:66][0m loss from real image generated
+[32m[0227 16:42:47 @tiGAN.py:83][0m loss from fake image and right text generated
+[32m[0227 16:43:03 @tiGAN.py:157][0m summary write initialized, writing to /ais/gobi4/tingwuwang/joint_embedding/tool/../model/../summary
+[32m[0227 16:43:03 @util.py:183][0m trying to load the dataset bird
+[32m[0227 16:43:03 @util.py:232][0m loaded data split from /ais/gobi4/tingwuwang/joint_embedding/tool/../data/data_dir/bird/bird_list.npy
+[32m[0227 16:43:03 @util.py:207][0m data loader initialized
+[32m[0227 16:43:06 @util.py:325][0m [LOAD BATCH] New batch, loading to id 64
+[32m[0227 16:43:09 @tiGAN.py:203][0m step: 0, discriminator: loss 1.78842759132, generator loss: 7.58562755585
+[32m[0227 16:43:13 @util.py:325][0m [LOAD BATCH] New batch, loading to id 128
+[32m[0227 16:43:15 @tiGAN.py:203][0m step: 1, discriminator: loss 0.595446288586, generator loss: 4.4726934433
+[32m[0227 16:43:19 @util.py:325][0m [LOAD BATCH] New batch, loading to id 192
+[32m[0227 16:43:22 @tiGAN.py:203][0m step: 2, discriminator: loss 0.812841415405, generator loss: 6.44321203232
+[32m[0227 16:43:25 @util.py:325][0m [LOAD BATCH] New batch, loading to id 256
+[32m[0227 16:43:28 @tiGAN.py:203][0m step: 3, discriminator: loss 0.311482191086, generator loss: 6.8469748497
+[32m[0227 16:43:31 @util.py:325][0m [LOAD BATCH] New batch, loading to id 320
+[32m[0227 16:43:34 @tiGAN.py:203][0m step: 4, discriminator: loss 0.336028933525, generator loss: 6.09790229797
+[32m[0227 16:43:37 @util.py:325][0m [LOAD BATCH] New batch, loading to id 384
+[32m[0227 16:43:40 @tiGAN.py:203][0m step: 5, discriminator: loss 0.32508161664, generator loss: 6.50307607651
+[32m[0227 16:43:44 @util.py:325][0m [LOAD BATCH] New batch, loading to id 448
+[32m[0227 16:43:47 @tiGAN.py:203][0m step: 6, discriminator: loss 0.280683964491, generator loss: 8.01934242249
+[32m[0227 16:43:50 @util.py:325][0m [LOAD BATCH] New batch, loading to id 512
+[32m[0227 16:43:53 @tiGAN.py:203][0m step: 7, discriminator: loss 0.213746875525, generator loss: 7.2009510994
+[32m[0227 16:43:56 @util.py:325][0m [LOAD BATCH] New batch, loading to id 576
+[32m[0227 16:43:59 @tiGAN.py:203][0m step: 8, discriminator: loss 0.257676690817, generator loss: 9.06425380707
+[32m[0227 16:44:02 @util.py:325][0m [LOAD BATCH] New batch, loading to id 640
+[32m[0227 16:44:06 @tiGAN.py:203][0m step: 9, discriminator: loss 0.105660364032, generator loss: 8.14992713928
+[32m[0227 16:44:09 @util.py:325][0m [LOAD BATCH] New batch, loading to id 704
+[32m[0227 16:44:11 @tiGAN.py:203][0m step: 10, discriminator: loss 0.172069430351, generator loss: 7.61322593689
+[32m[0227 16:44:14 @util.py:325][0m [LOAD BATCH] New batch, loading to id 768
+[32m[0227 16:44:17 @tiGAN.py:203][0m step: 11, discriminator: loss 0.232814729214, generator loss: 11.8786153793
+[32m[0227 16:44:20 @util.py:325][0m [LOAD BATCH] New batch, loading to id 832
+[32m[0227 16:44:23 @tiGAN.py:203][0m step: 12, discriminator: loss 0.0650709718466, generator loss: 11.5715026855
