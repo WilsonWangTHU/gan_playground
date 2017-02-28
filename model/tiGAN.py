@@ -84,7 +84,7 @@ class TI_GAN(object):
         with tf.variable_scope("", reuse=True):
             self.d_network_wr = GAN.img_discriminator(
                 self.config, stage=self.stage)
-            self.d_network_wr.build_models(self.fake_img, self.wrong_sen_rep)
+            self.d_network_wr.build_models(self.fake_img, self.real_sen_rep)
         self.fr_score = self.d_network_wr.get_score()
         self.loss_f = tf.reduce_mean(
             compat_tf.sigmoid_cross_entropy_with_logits(
